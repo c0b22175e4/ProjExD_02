@@ -8,8 +8,6 @@ delta = {  # 練習３：押下キーと移動量の辞書
     pg.K_LEFT: (-5, 0),
     pg.K_RIGHT: (+5, 0)
 }
-
-
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     オブジェクトが画面内or画面外を判定し，真理値タプルを返す関数
@@ -22,9 +20,6 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:  # 縦方向はみ出し判定
         tate = False
     return yoko, tate
-
-
-
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -46,7 +41,11 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-            
+
+        if kk_rct.colliderect(bb_rct):
+            print("Game Over")
+            return
+
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, tpl in delta.items():
@@ -54,7 +53,6 @@ def main():
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
         
-
         screen.blit(bg_img, [0, 0])
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
         if check_bound(kk_rct) != (True, True):
