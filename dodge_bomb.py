@@ -75,10 +75,23 @@ def main():
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         
         screen.blit(kk_img, kk_rct)  # 練習３：こうかとんを移動させる
+        
         bb_rct.move_ip(vx, vy)  # 練習２：爆弾を移動させる
         t = pg.time.get_ticks() / 1000 # 演習2：時間とともに爆弾が加速する
         vx += t
         vy += t
+        
+        """
+        max_acceleration = 10.0  # 修正
+        while True:
+            t = pg.time.get_ticks() / 1000
+            vx += t
+            vy += t
+            vx = min(vx, max_acceleration)
+            vy = min(vy, max_acceleration)
+            bb_rct.move_ip(vx, vy)
+        """
+
         yoko, tate = check_bound(bb_rct)
         if not yoko:  # 横方向にはみ出たら
             vx *= -1
@@ -89,6 +102,7 @@ def main():
         pg.display.update()
         tmr += 1
         clock.tick(50)
+        
 if __name__ == "__main__":
     pg.init()
     main()
