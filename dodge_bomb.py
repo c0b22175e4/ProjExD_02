@@ -1,12 +1,20 @@
 import random
 import sys
 import pygame as pg
+
 WIDTH, HEIGHT = 1600, 900
-delta = {  # 練習３：押下キーと移動量の辞書
+delta = {
+      # 練習３：押下キーと移動量の辞書
+    pg.K_UP and pg.K_LEFT:(-5,-5),
+    pg.K_UP and pg.K_RIGHT:(+5,-5),
+    pg.K_DOWN and pg.K_LEFT:(-5,+5),
+    pg.K_DOWN and pg.K_RIGHT:(+5,+5),
     pg.K_UP: (0, -5),  # キー：移動量／値：（横方向移動量，縦方向移動量）
     pg.K_DOWN: (0, +5),
     pg.K_LEFT: (-5, 0),
-    pg.K_RIGHT: (+5, 0)
+    pg.K_RIGHT: (+5, 0),
+    
+    
 }
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
@@ -36,6 +44,14 @@ def main():
     bb_rct.centery = random.randint(0, HEIGHT)
     vx, vy = +5, +5  # 練習２：爆弾の速度
     clock = pg.time.Clock()
+    """
+    accs = [a for a in range(1, 11)]
+    bb_imgs = 0
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        #bb_imgs.append(bb_img)
+    """
     tmr = 0
     while True:
         for event in pg.event.get():
@@ -57,8 +73,12 @@ def main():
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        
         screen.blit(kk_img, kk_rct)  # 練習３：こうかとんを移動させる
         bb_rct.move_ip(vx, vy)  # 練習２：爆弾を移動させる
+        t = pg.time.get_ticks() / 1000 # 演習2：時間とともに爆弾が加速する
+        vx += t
+        vy += t
         yoko, tate = check_bound(bb_rct)
         if not yoko:  # 横方向にはみ出たら
             vx *= -1
